@@ -1,14 +1,13 @@
 import json
 import os
-import time
 
-import discord
 from discord.ext import commands
 
-from poe.async_char import Character
+from poe.character import Character
 from poe.ladder import Ladder
 
 bot = commands.Bot(command_prefix="$")
+
 
 @bot.command()
 async def alert(ctx, player, item_type=None):
@@ -26,5 +25,6 @@ async def alert(ctx, player, item_type=None):
         character = Character(char_name, account_name)
         items = await character.items(item_type)
         await ctx.send(json.dumps(items, indent=4))
+
 
 bot.run(os.environ["DISCORD_TOKEN"])

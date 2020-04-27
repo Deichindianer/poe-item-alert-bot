@@ -1,13 +1,12 @@
 import asyncio
 import os
-import json
 
 import aiohttp
 
-from poe.async_char import Character
+from poe.character import Character
 
-class Ladder():
 
+class Ladder:
     def __init__(self, name):
         self.name = name
         self.cookies = {"POESESSID": os.environ.get("POE_SESS_ID")}
@@ -27,7 +26,7 @@ class Ladder():
                 ladder = await r.json()
                 characters = ladder["entries"]
                 return characters
-    
+
     async def filter_all(self, item_type):
         players = await self._get_characters()
         for player in players:
@@ -37,4 +36,3 @@ class Ladder():
             items = await character.items()
             yield {"Player": account_name, "Items": items}
             await asyncio.sleep(0.5)
-        
