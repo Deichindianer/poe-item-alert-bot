@@ -1,9 +1,12 @@
 import asyncio
+import logging
 import os
 
 import aiohttp
 
 from poe.character import Character
+
+logger = logging.getLogger("poe_alert_bot.ladder")
 
 
 class Ladder:
@@ -14,7 +17,11 @@ class Ladder:
             raise ValueError("You need to supply the environment var POE_SESS_ID")
         base_url = "http://api.pathofexile.com"
         url_path = f"ladders/{name}"
-        url_options = "limit=10"
+        if os.environ.get("LADDER_LIMIT"):
+            ladder_limit = os.environ["LADDER_LIMIT"]
+        else:
+            ladder_limit = 50
+        url_options = f"limit={ladder_limit}"
         self.url = f"{base_url}/{url_path}?{url_options}"
 
     async def _get_characters(self):

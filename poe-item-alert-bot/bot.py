@@ -1,4 +1,4 @@
-import json
+import logging
 import os
 
 from discord.ext import commands
@@ -6,13 +6,30 @@ from discord.ext import commands
 # from poe.character import Character
 from poe.ladder import Ladder
 
+logging.basicConfig(format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+logger = logging.getLogger("poe_alert_bot")
+if os.environ.get("LOG_LEVEL"):
+    logger.setLevel(os.environ["LOG_LEVEL"])
+else:
+    logger.setLevel("INFO")
+tter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+
 bot = commands.Bot(command_prefix="$")
 
 
 @bot.command()
 async def alert(ctx, player, *args):
+    logging.debug(f"Got alert event: {args}")
     if player == "all":
-        ladder = Ladder(os.environ["POE_LADDER"])
+        try:
+            logger.debug("Using existing league_cache to identify league")
+            with open("/tmp/poe_item_alert_bot_league_cache") as f:
+                ladder_cache = f.read()
+            ladder = Ladder(ladder_cache)
+        except FileNotFoundError:
+            logger.debug("No league cache present needs to be created!")
+            await ctx.send("Please set the league with $set_league league_name")
+            return
         # expect something like type:TypeName or mod:ModValue
         if args:
             filters = []
@@ -22,13 +39,38 @@ async def alert(ctx, player, *args):
                 filters.append(
                     {"filter_type": filter_type, "filter_value": filter_value}
                 )
-
+            logger.debug(f"Created filter list: {filters}")
         async for player in ladder.filter_all(filters):
-            if player["Items"]:
-                print(f"Found {player}")
-                await ctx.send(json.dumps(player))
+            item_list = []
+            for item in player["Items"]:
+                if item:
+                    item_list.append(True)
+                else:
+                    item_list.append(False)
+            if any(item_list):
+                logger.info(f"Found {player}")
+                message = f"**{player['Player']}** has matching items:\n"
+                for item_filter, items in player["Items"].items():
+                    if items:
+                        message += f"```{item_filter}: {', '.join(items)}```\n"
+                message += "\n"
+                await ctx.send(message)
             else:
-                print(f"{player['Player']} does not match filter")
+                logger.info(f"{player['Player']} does not match filter")
+
+
+@bot.command()
+async def set_league(ctx, league_name):
+    with open("/tmp/poe_item_alert_bot_league_cache", "w+") as f:
+        f.write(league_name)
+    await ctx.send(f"Set active league: {league_name}")
+
+
+@bot.command()
+async def get_league(ctx):
+    with open("/tmp/poe_item_alert_bot_league_cache") as f:
+        league = f.read()
+    await ctx.send(f"Current active league: {league}")
 
 
 bot.run(os.environ["DISCORD_TOKEN"])
