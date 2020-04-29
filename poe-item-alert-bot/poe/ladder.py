@@ -14,7 +14,7 @@ class Ladder:
             raise ValueError("You need to supply the environment var POE_SESS_ID")
         base_url = "http://api.pathofexile.com"
         url_path = f"ladders/{name}"
-        url_options = "limit=200"
+        url_options = "limit=10"
         self.url = f"{base_url}/{url_path}?{url_options}"
 
     async def _get_characters(self):
@@ -27,12 +27,12 @@ class Ladder:
                 characters = ladder["entries"]
                 return characters
 
-    async def filter_all(self, item_type):
+    async def filter_all(self, filters):
         players = await self._get_characters()
         for player in players:
             account_name = player["account"]["name"]
             character_name = player["character"]["name"]
-            character = Character(character_name, account_name, item_type)
+            character = Character(character_name, account_name, filters)
             items = await character.items()
             yield {"Player": account_name, "Items": items}
-            await asyncio.sleep(0.5)
+            await asyncio.sleep(1)

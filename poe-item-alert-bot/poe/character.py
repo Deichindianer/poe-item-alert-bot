@@ -6,10 +6,10 @@ from poe.items import ItemFilter
 
 
 class Character:
-    def __init__(self, name, account, item_type):
+    def __init__(self, name, account, filters):
         self.name = name
         self.account = account
-        self.item_type = item_type
+        self.filters = filters
         base_url = "http://www.pathofexile.com"
         url_path = f"character-window/get-items"
         url_options = f"character={self.name}&accountName={account}"
@@ -31,7 +31,7 @@ class Character:
         char = await self._get_char()
         if char.get("items"):
             items = char["items"]
-            return ItemFilter(items, self.item_type).items
+            return ItemFilter(items, self.filters).result
         else:
             print(f"No items found for {char}")
             return []
