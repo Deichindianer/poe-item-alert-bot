@@ -18,7 +18,22 @@ If you're unsure what league is currently active
 
 ![get league](docs/get_league.png)
 
+# Race filters
+
+Just a quick list of filters that might be useful for casters :)
+
+* `!item-alert find "type+mod:Boots+Movement Speed"`
+* `!item-alert find "type+mod:Flask+Movement Speed"`
+* `!item-alert find "links:4" "unique:any"`
+* `!item-alert find "type+mod:Flask+Instantly"` - this one can't run on `Life Flask` because of the way I wrote the matching logic currently
+* `!item-alert find "unique:Tabula Rasa" "unique:Wanderlust"` - Add all of the ones you want to check for here in one query, it's faster than checking alone because the character is cached between these runs :)
+
+![race filter example](docs/race_filter_example.png)
+
+# Filter explanations
+
 Now for the cool stuff the actual cool stuff, finding items!
+
 
 The basic concept is that you have the `!item-alert find` command as the entrypoint.
 Behind that command you can specify filters like `type:Boots` or `mod:Movement Speed`. The bot will take these filters individually and run over all characters and all items in the ladder pinging you back the matches.
@@ -79,12 +94,3 @@ To reduce waiting time on the API (I wish it was less evil to me :( ) it is poss
 
 ![multiple filters](docs/multiple_filters.png)
 
-# Race filters
-
-Just a quick list of filters that might be useful for casters :)
-
-* `!item-alert find "type+mod:Boots+Movement Speed"`
-* `!item-alert find "type+mod:Flask+Movement Speed"`
-* `!item-alert find "links:4" "unique:any"`
-* `!item-alert find "type+mod:Flask+Instantly"` - this one can't run on `Life Flask` because of the way I wrote the matching logic currently
-* `!item-alert find "unique:Tabula Rasa" "unique:Wanderlust"` - Add all of the ones you want to check for here in one query, it's faster than checking alone because the character is cached between these runs :)
