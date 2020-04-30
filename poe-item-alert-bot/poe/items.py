@@ -52,24 +52,36 @@ class ItemFilter:
                     # at least not until someone complains :D
                     if links and mod:
                         logger.debug(f"Mod and link filters matched!")
-                        logger.debug(f"{item['typeLine']}({links}L)[{mod}]")
-                        items.append(f"{item['typeLine']}({links}L)[{mod}]")
+                        logger.debug(
+                            f"{item['typeLine']} - {item['inventoryId']}({links}L)[{mod}]"
+                        )
+                        items.append(
+                            f"{item['typeLine']} - {item['inventoryId']}({links}L)[{mod}]"
+                        )
                     elif mod:
                         logger.debug(f"Mod filter matched")
-                        logger.debug(f"{item['typeLine']}[{mod}]")
-                        items.append(f"{item['typeLine']}[{mod}]")
+                        logger.debug(
+                            f"{item['typeLine']} - {item['inventoryId']}[{mod}]"
+                        )
+                        items.append(
+                            f"{item['typeLine']} - {item['inventoryId']}[{mod}]"
+                        )
                     elif links:
                         logger.debug(f"Link filter matched")
-                        logger.debug(f"{item['typeLine']}({links}L)")
-                        items.append(f"{item['typeLine']}({links}L)")
+                        logger.debug(
+                            f"{item['typeLine']} - {item['inventoryId']}({links}L)"
+                        )
+                        items.append(
+                            f"{item['typeLine']} - {item['inventoryId']}({links}L)"
+                        )
                     elif unique_name:
                         logger.debug(f"Unique filter matched")
-                        logger.debug(f"{item['name']}")
-                        items.append(f"{item['name']}")
+                        logger.debug(f"{item['name']} - {item['inventoryId']}")
+                        items.append(f"{item['name']} - {item['inventoryId']}")
                     else:
                         logger.debug(f"Type filter matched")
-                        logger.debug(f"{item['typeLine']}")
-                        items.append(f"{item['typeLine']}")
+                        logger.debug(f"{item['typeLine']} - {item['inventoryId']}")
+                        items.append(f"{item['typeLine']} - {item['inventoryId']}")
         logger.info(f"Matched items: {items}")
         return items
 
