@@ -8,11 +8,15 @@ You need to register the league the bot should be working in first:
 !item-alert set_league "SSF Delirium"
 ```
 
+![set league](docs/set_league.png)
+
 If you're unsure what league is currently active
 
 ```
 !item-alert get_league
 ```
+
+![get league](docs/get_league.png)
 
 Now for the cool stuff the actual cool stuff, finding items!
 
