@@ -49,9 +49,8 @@ async def find(ctx, *args):
         if any(item_list):
             logger.info(f"Found {player}")
             if player["Twitch"]:
-                message = (
-                    f"**{player['Player']}**({player['Twitch']}) has matching items:\n"
-                )
+                twitch_link = f"https://twitch.tv/{player['Twitch']}"
+                message = f"**{player['Player']}**({twitch_link}) has matching items:\n"
             else:
                 message = f"**{player['Player']}** has matching items:\n"
             for item_filter, items in player["Items"].items():
