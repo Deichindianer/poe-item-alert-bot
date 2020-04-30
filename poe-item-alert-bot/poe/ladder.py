@@ -39,7 +39,15 @@ class Ladder:
         for player in players:
             account_name = player["account"]["name"]
             character_name = player["character"]["name"]
+            if player["account"].get("twitch"):
+                twitch = player["account"]["twitch"]["name"]
+            else:
+                twitch = None
             character = Character(character_name, account_name, filters)
             items = await character.items()
-            yield {"Player": account_name, "Items": items}
+            yield {"Player": account_name, "Twitch": twitch, "Items": items}
             await asyncio.sleep(1)
+
+    async def _match_account_name(self, account_name):
+        if account_name == "sanguinespirit":
+            return "Havoc"
