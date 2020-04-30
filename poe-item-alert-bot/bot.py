@@ -27,7 +27,9 @@ async def find(ctx, *args):
         await ctx.send(f"Running search in {ladder_cache} for {args}")
     except FileNotFoundError:
         logger.debug("No league cache present needs to be created!")
-        await ctx.send("Please set the league with $set_league league_name")
+        await ctx.send(
+            "Please set the league with `!item-alert set_league league_name`"
+        )
         return
     # expect something like type:TypeName or mod:ModValue
     if args:
