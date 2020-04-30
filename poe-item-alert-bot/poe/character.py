@@ -30,6 +30,7 @@ class Character:
 
     async def items(self):
         char = await self._get_char()
+        # logger.debug(char)
         if char.get("items"):
             logger.debug("Character has items!")
             items = char["items"]
@@ -37,7 +38,7 @@ class Character:
             for item_filter in self.item_filters:
                 logger.debug(f"Running {item_filter} over items...")
                 item_filter_msg = (
-                    item_filter["filter_type"] + item_filter["filter_value"]
+                    f"{item_filter['filter_type']} {item_filter['filter_value']}"
                 )
                 filtered_items[item_filter_msg] = ItemFilter(items, item_filter).result
             filtered_vals = [i for i in filtered_items.values()]
@@ -48,5 +49,5 @@ class Character:
             else:
                 return []
         else:
-            print(f"No items found for {char['character']['name']}")
+            logger.debug(f"No items found for {char['character']['name']}")
             return []
