@@ -9,7 +9,7 @@ logger = logging.getLogger("poe_alert_bot.character")
 
 class Character:
     def __init__(self, name, account, item_filters):
-        logger.debug(f"Initialized character {name}!")
+        logger.info(f"Initialized character {name}!")
         self.name = name
         self.account = account
         self.item_filters = item_filters
@@ -42,12 +42,12 @@ class Character:
                 )
                 filtered_items[item_filter_msg] = ItemFilter(items, item_filter).result
             filtered_vals = [i for i in filtered_items.values()]
-            logger.debug(f"Reuslt of the filter: {filtered_vals}")
+            logger.debug(f"Result of the filter: {filtered_vals}")
             if any(filtered_vals):
-                logger.debug(f"Found {filtered_items}")
+                logger.info(f"Found {filtered_items}")
                 return filtered_items
             else:
                 return []
         else:
-            logger.debug(f"No items found for {char['character']['name']}")
+            logger.info(f"No items found for {char['character']['name']}")
             return []

@@ -18,15 +18,15 @@ bot = commands.Bot(command_prefix="!item-alert ")
 
 @bot.command()
 async def find(ctx, *args):
-    logging.debug(f"Got alert event: {args}")
+    logging.info(f"Got alert event: {args}")
     try:
-        logger.debug("Using existing league_cache to identify league")
+        logger.info("Using existing league_cache to identify league")
         with open("/tmp/poe_item_alert_bot_league_cache") as f:
             ladder_cache = f.read()
         ladder = Ladder(ladder_cache)
         await ctx.send(f"Running search in {ladder_cache} for {args}")
     except FileNotFoundError:
-        logger.debug("No league cache present needs to be created!")
+        logger.warning("No league cache present needs to be created!")
         await ctx.send(
             "Please set the league with `!item-alert set_league league_name`"
         )

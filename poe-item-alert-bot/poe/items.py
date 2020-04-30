@@ -5,7 +5,7 @@ logger = logging.getLogger("poe_alert_bot.items")
 
 class ItemFilter:
     def __init__(self, items, item_filter):
-        logger.debug(f"Initialized ItemFilter with {item_filter}")
+        logger.info(f"Initialized ItemFilter with {item_filter}")
         self.items = items
         self.item_filter = item_filter
         self.result = self.filter()
@@ -70,7 +70,7 @@ class ItemFilter:
                         logger.debug(f"Type filter matched")
                         logger.debug(f"{item['typeLine']}")
                         items.append(f"{item['typeLine']}")
-        logger.debug(f"Matched items: {items}")
+        logger.info(f"Matched items: {items}")
         return items
 
     def type_filter(self, item, filter_value):
