@@ -47,7 +47,3 @@ class Ladder:
             items = await character.items()
             yield {"Player": account_name, "Twitch": twitch, "Items": items}
             await asyncio.sleep(1)
-
-    async def _match_account_name(self, account_name):
-        if account_name == "sanguinespirit":
-            return "Havoc"

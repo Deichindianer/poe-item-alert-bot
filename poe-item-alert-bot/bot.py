@@ -4,6 +4,7 @@ import os
 from discord.ext import commands
 
 from poe.ladder import Ladder
+from util import match_player_to_acc
 
 logging.basicConfig(format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 logger = logging.getLogger("poe_alert_bot")
@@ -13,7 +14,7 @@ else:
     logger.setLevel("INFO")
 tter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 
-bot = commands.Bot(command_prefix="!item-alert ")
+bot = commands.Bot(command_prefix="!item-alert-dev ")
 
 
 @bot.command()
@@ -40,6 +41,10 @@ async def find(ctx, *args):
             filters.append({"filter_type": filter_type, "filter_value": filter_value})
         logger.debug(f"Created filter list: {filters}")
     async for player in ladder.filter_all(filters):
+        try:
+            actual_name = match_player_to_acc(player["Player"].lower())
+        except KeyError:
+            actual_name = player["Player"]
         item_list = []
         for item in player["Items"]:
             if item:
@@ -52,7 +57,7 @@ async def find(ctx, *args):
             #     twitch_link = f"https://twitch.tv/{player['Twitch']}"
             #     message = f"**{player['Player']}**({twitch_link}) has matching items:\n"
             # else:
-            message = f"**{player['Player']}** has matching items:\n"
+            message = f"**{actual_name}** has matching items:\n"
             for item_filter, items in player["Items"].items():
                 if items:
                     message += f"```{item_filter}: {', '.join(items)}```\n"
