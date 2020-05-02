@@ -14,7 +14,7 @@ else:
     logger.setLevel("INFO")
 tter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 
-bot = commands.Bot(command_prefix="!item-alert-dev ")
+bot = commands.Bot(command_prefix="!item-alert ")
 
 
 @bot.command()
