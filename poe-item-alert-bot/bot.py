@@ -1,6 +1,7 @@
 import logging
 import os
 
+from discord import Embed
 from discord.ext import commands
 
 from poe.ladder import Ladder
@@ -57,11 +58,11 @@ async def find(ctx, *args):
             #     twitch_link = f"https://twitch.tv/{player['Twitch']}"
             #     message = f"**{player['Player']}**({twitch_link}) has matching items:\n"
             # else:
-            message = f"**{actual_name}** has matching items:\n"
+            title = f"**{actual_name}** has matching items:\n"
+            message = Embed(title=title)
             for item_filter, items in player["Items"].items():
                 if items:
-                    message += f"```{item_filter}: {', '.join(items)}```\n"
-            message += "\n"
+                    message.add_field(name=item_filter, value=", ".join(items))
             await ctx.send(message)
         else:
             logger.info(f"{player['Player']} does not match filter")
