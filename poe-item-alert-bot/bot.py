@@ -15,7 +15,7 @@ else:
     logger.setLevel("INFO")
 tter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 
-bot = commands.Bot(command_prefix="!item-alert ")
+bot = commands.Bot(command_prefix="!item-alert-dev ")
 
 
 @bot.command()
@@ -58,12 +58,16 @@ async def find(ctx, *args):
             #     twitch_link = f"https://twitch.tv/{player['Twitch']}"
             #     message = f"**{player['Player']}**({twitch_link}) has matching items:\n"
             # else:
-            title = f"**{actual_name}** has matching items:\n"
+            title = f"{actual_name} has matching items"
             message = Embed(title=title)
             for item_filter, items in player["Items"].items():
                 if items:
-                    message.add_field(name=item_filter, value=", ".join(items))
-            await ctx.send(message)
+                    message.add_field(
+                        name=item_filter,
+                        value=", ".join(items),
+                        inline=True
+                    )
+            await ctx.send(embed=message)
         else:
             logger.info(f"{player['Player']} does not match filter")
 
