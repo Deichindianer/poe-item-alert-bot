@@ -15,7 +15,7 @@ else:
     logger.setLevel("INFO")
 tter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 
-bot = commands.Bot(command_prefix="!item-alert-dev ")
+bot = commands.Bot(command_prefix="!item-alert ")
 
 
 @bot.command()
@@ -63,9 +63,7 @@ async def find(ctx, *args):
             for item_filter, items in player["Items"].items():
                 if items:
                     message.add_field(
-                        name=item_filter,
-                        value=", ".join(items),
-                        inline=True
+                        name=item_filter, value=", ".join(items), inline=True
                     )
             await ctx.send(embed=message)
         else:
