@@ -21,3 +21,16 @@ wheels/
 .installed.cfg
 *.egg
 MANIFEST
+
+# Lambda libs / binaries
+chardet*
+idna*
+urllib*
+requests*
+certifi*
+bin/
+*.zip
+
+# Terraform
+.terraform*
+
