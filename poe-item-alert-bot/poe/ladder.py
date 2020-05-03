@@ -36,14 +36,18 @@ class Ladder:
 
     async def filter_all(self, filters):
         players = await self._get_characters()
+        # characters = []
         for player in players:
+            if player["character"]["class"] == "Scion":
+                pass
             account_name = player["account"]["name"]
             character_name = player["character"]["name"]
             if player["account"].get("twitch"):
                 twitch = player["account"]["twitch"]["name"]
             else:
                 twitch = None
+            # characters.append({"account": account_name, "char": character_name})
             character = Character(character_name, account_name, filters)
             items = await character.items()
             yield {"Player": account_name, "Twitch": twitch, "Items": items}
-            await asyncio.sleep(1)
+            await asyncio.sleep(0.5)

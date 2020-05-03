@@ -24,7 +24,9 @@ class Character:
         async with aiohttp.ClientSession(headers=headers) as session:
             async with session.get(self.url) as r:
                 character = await r.json()
+                logger.debug(f"API response: {character.keys()}")
                 if character.get("error"):
+                    logger.debug(f"Got error! {character}")
                     return {"character": {"name": f"{self.name}"}}
                 return character
 
