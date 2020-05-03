@@ -6,10 +6,10 @@ variable "aws_region" {
 variable "tags" {
   description = "Common tags shared across all resources, specific tags are in the resources"
   type = object({
-    Application    = string
+    Application = string
   })
   default = {
     Application = "poe-item-alert-bot"
-  } 
+  }
 }
 

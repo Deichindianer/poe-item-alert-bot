@@ -12,8 +12,12 @@ logger.setLevel(logging.DEBUG)
 
 def handler(event, context):
     ddb = boto3.client("dynamodb")
+    ssm = boto3.client("ssm")
+    league = ssm.get_parameter(Name="/poe-item-alert/league")["Parameter"]["Value"]
     all_characters = ddb.scan(
-        TableName="poe_api_export_cache"
+        TableName="poe_api_export_cache",
+        FilterExpression="player_league = :league",
+        ExpressionAttributeValues={":league": {"S": league}}
         # Key={"player_name": {"S": event["player_name"].lower()}}
     )
     logger.debug(f"Result: {all_characters}")

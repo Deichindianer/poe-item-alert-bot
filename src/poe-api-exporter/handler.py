@@ -28,7 +28,7 @@ def handler(event, context):
     #     ladder_cache_time["Parameter"]["Value"],
     #     "%y-%m-%dT%H%M%S%z"
     # )
-    ladder = get_ladder(league, 10)
+    ladder = get_ladder(league, 50)
     ddb = boto3.resource("dynamodb")
     logger.debug(f"Matching {ladder_cache_time} with {ladder['cached_since']}")
     if ladder_cache_time == ladder["cached_since"]:
@@ -52,8 +52,8 @@ def handler(event, context):
         ddb_item = remove_empty_string(parsed_char)
         poe_api_cache_table.put_item(
             Item={
-                # TODO: not sure if this is player or account I'm loosing my mind
                 "player_name": player["account"]["name"].lower(),
+                "player_league": league,
                 "player_data": ddb_item,
             }
         )

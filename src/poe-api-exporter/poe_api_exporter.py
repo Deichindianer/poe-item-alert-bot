@@ -1,4 +1,5 @@
 import logging
+import time
 
 import boto3
 import requests
@@ -16,6 +17,7 @@ def get_ladder(ladder_name, ladder_limit):
     headers = ladder.headers
     logger.debug(f"Resonse headers: {headers}")
     ladder_json = ladder.json()
+    _rate_limit_backoff(headers)
     ssm.put_parameter(
         Name="/poe-api-exporter/ladder-cache-timestamp",
         Value=ladder_json["cached_since"],
@@ -34,6 +36,9 @@ def get_character(account_name, character_name):
     headers = {"content-type": "application/json"}
     # TODO: implement rate limiting logic because FUCK ME ITS PAINFUL
     character = requests.get(character_url, headers=headers)
+    logger.debug(f"Response headers: {character.headers}")
+    resp_headers = character.headers
+    _rate_limit_backoff(resp_headers)
     # {'error': {'code': 6, 'message': 'Forbidden'}}
     character_json = character.json()
     if character_json.get("error"):
@@ -47,3 +52,18 @@ def get_character(account_name, character_name):
         return {}
     # TODO: parse this json thing somehow LOL
     return character_json
+
+
+def _rate_limit_backoff(headers):
+    current_rate_status = headers["X-Rate-Limit-Ip-State"].split(",")
+    rate_rules = headers["X-Rate-Limit-Ip"].split(",")
+    for status, rule in zip(current_rate_status, rate_rules):
+        c_rate, c_int, c_pen = status.split(":")
+        m_rate, m_int, m_pen = rule.split(":")
+        logger.debug(f"Current rate: {c_rate}, {c_int}, {c_pen}")
+        logger.debug(f"Max rate: {m_rate}, {m_int}, {m_pen}")
+        rate_ratio = int(c_rate) / int(m_rate)
+        if rate_ratio > 0.9:
+            backoff_duration = int(m_int) * 0.25
+            logger.warning(f"Rate is exceeding 90% backing off for {backoff_duration}s")
+            time.sleep(backoff_duration)

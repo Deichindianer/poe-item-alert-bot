@@ -41,3 +41,25 @@ resource "aws_iam_role_policy_attachment" "poe_api_exporter_lambda_basic_executi
   role       = aws_iam_role.poe_api_exporter.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
+
+# event rule
+resource "aws_cloudwatch_event_rule" "poe_api_exporter" {
+  name                = "poe-api-export"
+  description         = "triggers the poe-api-export every minute"
+  schedule_expression = "rate(1 minute)"
+  tags                = merge(var.tags, map("Name", "poe-api-export", "Component", "poe_api_exporter"))
+}
+
+resource "aws_cloudwatch_event_target" "poe_api_exporter" {
+  target_id = "poe_api_exporter"
+  rule = aws_cloudwatch_event_rule.poe_api_exporter.name
+  arn = aws_lambda_function.poe_api_exporter.arn
+}
+
+resource "aws_lambda_permission" "allow_cloudwatch" {
+  statement_id  = "AllowExecutionFromCloudwatch"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.poe_api_exporter.function_name
+  principal     = "events.amazonaws.com"
+  source_arn    = aws_cloudwatch_event_rule.poe_api_exporter.arn
+}
